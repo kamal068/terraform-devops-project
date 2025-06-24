@@ -37,7 +37,9 @@ jobs:
 
       # Terraform Plan
       - name: Terraform Plan
-        run: terraform plan -input=false -var="db_password=${{ secrets.DB_PASSWORD }}"
+        env:
+          TF_VAR_db_password: ${{ secrets.DB_PASSWORD }}
+        run: terraform plan -input=false
 
       # Terraform Apply (Optional: Only runs on main branch push events)
       - name: Terraform Apply
