@@ -1,25 +1,19 @@
-module "eks_cluster" {
-  source          = "terraform-aws-modules/eks/aws"
-  cluster_name    = "${var.project_name}-eks"
-  cluster_version = "1.28"
-  subnet_ids      = ["subnet-00930275b025e1c03"]
-  vpc_id          = "vpc-060fd218b9daa72e0"
+module "eks" {
+  source  = "terraform-aws-modules/eks/aws"
+  version = "20.8.5"
 
- resource "aws_eks_node_group" "example" {
-  cluster_name    = aws_eks_cluster.example.name
-  node_group_name = "example-node-group"
-  node_role_arn   = aws_iam_role.eks_node.arn
-  subnet_ids      = [subnet-00930275b025e1c03, subnet-0c68210ac790a0f26]
+  cluster_name    = "example"
+  cluster_version = "1.27"
+  subnet_ids       = ["subnet-00930275b025e1c03"]
+  vpc_id  = "vpc-1234567890abcdef0"
 
-  scaling_config {
-    desired_size = 2
-    max_size     = 3
-    min_size     = 1
-  }
-  }
+  eks_managed_node_groups = {
+    example = {
+      desired_capacity = 2
+      max_capacity     = 3
+      min_capacity     = 1
 
-  tags = {
-    Environment = "Dev"
-    Project     = var.project_name
+      instance_types = ["t2.micro"]
+    }
   }
 }
